@@ -1,0 +1,21 @@
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: develop
+  namespace: argocd
+spec:
+  project: develop
+  source:
+    repoURL: https://github.com/mcostabile/aws-ecs.git
+    targetRevision: HEAD
+    path: ecs
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: develop
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+

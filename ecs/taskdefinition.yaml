@@ -1,0 +1,69 @@
+---
+
+apiVersion: ecs.aws.crossplane.io/v1alpha1
+kind: TaskDefinition
+metadata:
+  name: develop
+spec:
+  forProvider:
+    family: develop-taskdefinition
+    region: us-west-1
+    containerDefinitions:
+    - cpu: 0
+      portMappings:
+      - containerPort: 8080
+        hostPort: 8080
+        protocol: tcp
+      image: bitnami/wordpress
+      name: wordpress
+    cpu: "256"
+    memory: "512"
+    networkMode: awsvpc
+    requiresCompatibilities:
+    - FARGATE
+    tags:
+    - key: Type
+      value: develop
+  providerConfigRef:
+    name: develop
+---
+apiVersion: ecs.aws.crossplane.io/v1alpha1
+kind: TaskDefinition
+metadata:
+  name: develop-with-volume
+spec:
+  forProvider:
+    family: develop-taskdefinition-with-volume
+    region: us-west-1
+    containerDefinitions:
+    - cpu: 0
+      portMappings:
+      - containerPort: 8080
+        hostPort: 8080
+        protocol: tcp
+      image: bitnami/wordpress
+      name: wordpress
+      mountPoints:
+      - containerPath: /bitnami/wordpress
+        sourceVolume: wordpress
+    cpu: "256"
+    memory: "512"
+    networkMode: awsvpc
+    requiresCompatibilities:
+    - FARGATE
+    tags:
+    - key: Type
+      value: develop
+    volumes:
+    - name: wordpress
+      efsVolumeConfiguration:
+        authorizationConfig:
+          iam: DISABLED
+          accessPointIDRef:
+            name: develop
+        fileSystemIDRef:
+          name: develop
+        rootDirectory: "/"
+        transitEncryption: ENABLED
+  providerConfigRef:
+    name: develop
