@@ -8,7 +8,7 @@ metadata:
 spec:
   project: develop
   source:
-    repoURL: https://github.com/mcostabile/aws-ecs.git
+    repoURL: https://github.com/mcostabile/AWS-ECS-Cluster.git
     targetRevision: HEAD
     path: ecs
   destination:
